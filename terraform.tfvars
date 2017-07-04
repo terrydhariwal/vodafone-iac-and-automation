@@ -1,0 +1,8 @@
+region = "us-central1"
+region_zone = "us-central1-a"
+project_name = "graceful-matter-161422"
+home_directory = "/home/cloudshellpythian"
+account_file_path = "~/gcp_credentials.json"
+//gce_ssh_pub_key_file = "~/.ssh/root_user.pub"
+//gce_ssh_private_key_file = "~/.ssh/root_user"
+//gce_ssh_user = "root"

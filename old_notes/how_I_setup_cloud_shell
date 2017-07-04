@@ -1,0 +1,20 @@
+Need a VM with gcloud and other tools pre-installed
+
+sh-keygen -t rsa -f ~/.ssh/gcp -C dhariwal@pythian.com
+
+Local gcloud setup
+==================
+- first setup the google cloud sdk https://cloud.google.com/sdk/docs/quickstart-mac-os-x
+		mv google-cloud-sdk-158.0.0-darwin-x86_64.tar.gz ~
+		cd ~
+		tar -xvzf google-cloud-sdk-158.0.0-darwin-x86_64.tar.gz
+		sudo ./google-cloud-sdk/install.sh
+
+- Initialize the SDK
+		sudo gcloud init
+
+- Test
+		sudo gcloud auth list
+		sudo gcloud config list
+
+		

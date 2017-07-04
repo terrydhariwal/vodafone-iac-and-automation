@@ -1,0 +1,131 @@
+Non Automated Steps
+===================
+1. Run terraform apply
+- This deploys the base-line VMs on Google
+- And installs puppet on them
+
+
+Master Node Setup
+=================
+1. Logon to puppet-master and sign agent certificates
+
+sudo /opt/puppetlabs/bin/puppet cert list 
+
+sudo /opt/puppetlabs/bin/puppet cert sign node.c.graceful-matter-161422.internal;sudo /opt/puppetlabs/bin/puppet cert sign node2.c.graceful-matter-161422.internal;sudo /opt/puppetlabs/bin/puppet cert sign node3.c.graceful-matter-161422.internal;sudo /opt/puppetlabs/bin/puppet cert sign spark.c.graceful-matter-161422.internal
+
+sudo /opt/puppetlabs/bin/puppet cert list -all
+
+2. copy over puppet file for automating the install of cassandra
+sudo nano /etc/puppetlabs/code/environments/production/manifests/nodes.pp
+copy code in puppet-code folder
+
+#3. restart agent nodes - they will then pull in the puppet instructions from master node and complete the install
+
+Cassandra and spark node setup
+==============================
+1. apply changes using puppet 
+sudo /opt/puppetlabs/bin/puppet agent --test --server=master.c.graceful-matter-161422.internal
+
+
+Initialize Cassandra nodes
+===========================
+sudo su - cassandra -c "/opt/apache-cassandra/bin/cassandra -f"
+sudo su - cassandra -c "/opt/apache-cassandra/bin/cassandra"
+/opt/apache-cassandra/bin/nodetool -p 7199 status
+
+Run Load Generator
+==================
+1. First setup keyspace and table
+
+/opt/apache-cassandra/bin/cqlsh node.c.graceful-matter-161422.internal
+
+create keyspace vodafone with replication = {'class':'SimpleStrategy', 'replication_factor':1} ;
+use vodafone; 
+create table vodafone.test( web text, somenumber int, someothernumber int, somedatetime timestamp, primary key ((web),somedatetime));
+select * from vodafone.test;
+
+
+2. finally run spark code in repo
+sudo /opt/apache-spark/bin/spark-submit --class "com.cleverbits.io.spark_examples.Vodafone" --master local /home/terry/vodafone-command-line-generator/target/spark-examples-0.0.1-SNAPSHOT.jar
+
+3. verfiy CSV has loaded its contents
+select * from vodafone.test;
+
+
+----
+
+Temp manual steps
+=================
+reboot
+update yaml files
+
+TO DO - disable firwall = need to open up proper firewall
+sudo systemctl status firewalld
+sudo systemctl disable firewalld
+sudo systemctl stop firewalld
+
+create cassandra group and user
+unzip to /opt/
+sudo su - cassandra -c "/opt/apache-cassandra/bin/cassandra -f"
+
+/opt/apache-cassandra/bin/nodetool -p 7199 status
+/opt/apache-cassandra/bin/cqlsh node.c.graceful-matter-161422.internal
+
+#need to update the ip address of the node!!
+#need to be in the /home/terry/vodafone-command-line-generator for this to run successfully
+sudo /opt/apache-spark/bin/spark-submit --class "com.cleverbits.io.spark_examples.Vodafone" --master local /home/terry/vodafone-command-line-generator/target/spark-examples-0.0.1-SNAPSHOT.jar
+
+need to define CSV file and cassandra nodes as arguments
+
+-------
+Notes dump
+==========
+sudo su - cassandra #switches to the said user
+sudo su - cassandra -c "echo whoami" #run command with said user but stay in the same context
+ps -aux | grep 'cassandra' 
+sudo chown -R cassandra:cassandra /opt/apache-cassandra-3.10/
+sudo useradd cassandra
+sudo groupadd cassandra
+sudo usermod -a -G cassandra cassandra
+cat /etc/passwd
+cat /etc/group
+cat /etc/group | grep 'cassandra'
+grep 'cassandra' /etc/group
+
+sudo usermod -a -G google-sudoers cassandra
+groups cassandra
+
+make executable
+sudo chmod -R +x /opt/apache-cassandra/bin
+ls -ls /opt/apache-cassandra/bin
+
+actually, I've kept cassandra in the /home/terry as it just work
+sudo chmod -R +x /home/terry/apache-cassandra/bin
+
+apache-cassandra/bin/nodetool -p 7199 status
+apache-cassandra/bin/cqlsh node.c.graceful-matter-161422.internal
+create keyspace vodafone with replication = {'class':'SimpleStrategy', 'replication_factor':1} ;
+use vodafone;
+describe vodafone.test;
+seletc * from vodafone.test;
+
+------
+sudo useradd cassandra
+sudo usermod -a -G cassandra cassandra
+grep cassandra /etc/group
+
+sudo mkdir -p /opt/apache-cassandra/bin/../data/data
+sudo chown -R cassandra:cassandra /opt/apache-cassandra/bin/../data/data
+
+sudo chown -R cassandra:cassandra apache-cassandra
+
+
+#sudo mkdir -p /var/lib/cassandra/commitlog
+#sudo chown -R cassandra:cassandra /var/lib/cassandra/commitlog
+
+
+#sudo mkdir -p /var/lib/cassandra/data
+#sudo chown -R cassandra:cassandra /var/lib/cassandra/data
+#sudo mkdir -p /var/lib/cassandra/commitlog
+#sudo chown -R cassandra:cassandra /var/lib/cassandra/commitlog
+
