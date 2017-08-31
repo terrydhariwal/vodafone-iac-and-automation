@@ -16,7 +16,7 @@ There are 4 parts to automate the installation of Cassandra and the application 
 
 ## Part 1: Infrastructure as Code
 1. Navigate to the [GCP console](https://console.cloud.google.com)
-2. Login as ``cloudshellpythian@gmail.com```
+2. Login as ``cloudshellpythian@gmail.com``
 3. Activate Google Cloud Shell ![Google Cloud Shell](images/activate-google-cloud-shell.png)
 4. In the home directory there are 2 files and 1 directory of interest
 	* The <strong>gcp_credentials.json</strong> file, which contains credentials for automating the spinning up of virtual machines on Google Cloud
