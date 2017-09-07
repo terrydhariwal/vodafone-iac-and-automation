@@ -121,7 +121,7 @@ The installation will complete in approximately 3-4 minutes
 * confirm Cassandra has started and initialised using 
 
 ```
-/opt/apache-cassandra/bin/nodetool -p 7199 status
+watch -n 2 /opt/apache-cassandra/bin/nodetool -p 7199 status
 ```
 	
 You should see output similar to this:
@@ -237,7 +237,8 @@ Now we've seeded Cassandra with our source data, you can now run the load-genera
 
 * on the application server do the following
 * ``cd ~/vodafone-load-generator/``
-* ``java -cp target/quick-start-1.0-SNAPSHOT.jar com.cleverbits.basics.CassandraLoadGenerator``
+* ``java -cp /home/terry/vodafone-client-rest/target/cassandra-client-rest-service-0.1.0.jar CassandraClientREST.Application &``
+* ``wget http://localhost:8080/runBashFile?writespersecond=18``
 * Confirm that the simulate writes are being written to ``vodafone.load`` using by
 
 
