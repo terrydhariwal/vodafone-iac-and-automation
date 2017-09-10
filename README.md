@@ -236,21 +236,19 @@ cqlsh> SELECT COUNT(*) FROM vodafone.prod ;
 Now we've seeded Cassandra with our source data, you can now run the load-generator, which will read this source data and simulate time series writes to another table called ``vodafone.load``
 
 * on the application server do the following
-* ``cd ~/vodafone-load-generator/``
+* ``cd /home/terry/vodafone-client-rest``
 * ``java -cp /home/terry/vodafone-client-rest/target/cassandra-client-rest-service-0.1.0.jar CassandraClientREST.Application &``
 * ``wget http://localhost:8080/runBashFile?writespersecond=18``
 * Confirm that the simulate writes are being written to ``vodafone.load`` using by
 
 
 ```
-SELECT COUNT(*) FROM vodafone.load ;
+watch -n 1 "/opt/apache-cassandra/bin/cqlsh node.c.graceful-matter-161422.internal -e 'select count(*) from vodafone.load'"
 ```
 	
 You should see output similar to
 	
 ```
-cqlsh> SELECT COUNT(*) FROM vodafone.load ;
-
  count
 -------
    972
