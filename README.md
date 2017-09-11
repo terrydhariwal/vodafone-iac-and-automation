@@ -239,7 +239,6 @@ Now we've seeded Cassandra with our source data, you can now run the load-genera
 * ``cd /home/terry/vodafone-client-rest``
 * ``java -cp /home/terry/vodafone-client-rest/target/cassandra-client-rest-service-0.1.0.jar CassandraClientREST.Application &``
 * ``java -jar /home/terry/vodafone-client-web-interface/target/spring-boot-web-jsp-1.0.war``
-#* ``wget http://localhost:8080/runBashFile?writespersecond=18``
 * Confirm that the simulate writes are being written to ``vodafone.load`` using by
 
 
